@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "jgtdatafactory"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"OfficeLaptopOnpremiseSSMS_connectionString": {
+			"value": ""
+		},
+		"OnPremiseSQLServer_connectionString": {
+			"value": ""
+		},
+		"Trigger_8b9_properties_Pipeline_8b9_parameters_windowStart": {
+			"value": "@{addminutes(trigger().scheduledTime, -2)}"
+		},
+		"Trigger_8b9_properties_Pipeline_8b9_parameters_windowEnd": {
+			"value": "@trigger().scheduledTime"
+		},
+		"text_trigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/5ace87dd-5164-4f04-9ac7-8fc12b8d5aaa/resourceGroups/jgt-demo/providers/Microsoft.Storage/storageAccounts/jgt1234"
+		}
+	}
+}
