@@ -1,0 +1,7 @@
+{
+	"name": "OnPremiseIR",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "Personal Laptop SSMS"
+	}
+}

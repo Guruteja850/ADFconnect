@@ -1,0 +1,93 @@
+{
+	"name": "df_unpivot2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Pivot_File",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_unpivot_output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "unpivot1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Sales Channel} as string,",
+				"          null as string,",
+				"          {Baby Food} as double,",
+				"          Beverages as double,",
+				"          Cereal as double,",
+				"          Clothes as double,",
+				"          Cosmetics as double,",
+				"          Fruits as double,",
+				"          Household as double,",
+				"          Meat as double,",
+				"          {Office Supplies} as double,",
+				"          {Personal Care} as double,",
+				"          Snacks as double,",
+				"          Vegetables as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"select1 unpivot(output(",
+				"          {Food Names} as string,",
+				"          Revenue as double",
+				"     ),",
+				"     ungroupBy({Sales Channel}),",
+				"     lateral: true,",
+				"     ignoreNullPivots: false) ~> unpivot1",
+				"source1 select(mapColumn(",
+				"          {Sales Channel},",
+				"          {Baby Food},",
+				"          Beverages,",
+				"          Cereal,",
+				"          Clothes,",
+				"          Cosmetics,",
+				"          Fruits,",
+				"          Household,",
+				"          Meat,",
+				"          {Office Supplies},",
+				"          {Personal Care},",
+				"          Snacks,",
+				"          Vegetables",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"unpivot1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          {9} as string,",
+				"          c as string,",
+				"          as as string,",
+				"          drp3 as string,",
+				"          region_3 as string,",
+				"          Yes as string",
+				"     ),",
+				"     partitionFileNames:['unpivotFile.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

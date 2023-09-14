@@ -1,0 +1,9 @@
+{
+	"name": "jgtdatafactory",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "87bab90e-ee49-44b3-a270-99f15a842fbf",
+		"tenantId": "1500323d-9faf-406c-a549-56015465cb47"
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"name": "Trigger_8b9",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Pipeline_8b9",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"windowStart": "@{addminutes(trigger().scheduledTime, -2)}",
+					"windowEnd": "@trigger().scheduledTime"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 2,
+				"startTime": "2023-08-21T05:58:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

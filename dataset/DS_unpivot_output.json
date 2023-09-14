@@ -1,0 +1,48 @@
+{
+	"name": "DS_unpivot_output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "output1"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "9",
+				"type": "String"
+			},
+			{
+				"name": "c",
+				"type": "String"
+			},
+			{
+				"name": "as",
+				"type": "String"
+			},
+			{
+				"name": "drp3",
+				"type": "String"
+			},
+			{
+				"name": "region_3",
+				"type": "String"
+			},
+			{
+				"name": "Yes",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

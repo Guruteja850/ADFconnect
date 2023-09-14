@@ -1,0 +1,162 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "employeeDetails",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "tbl_emp",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "tbl_emp",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "tbl_emp",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "csvHash"
+				},
+				{
+					"name": "tableHash"
+				},
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "setToActive"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "alterRow1"
+				},
+				{
+					"name": "exists2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          empId as integer,",
+				"          empName as string,",
+				"          gender as string,",
+				"          country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          surrKey as integer,",
+				"          empId as integer,",
+				"          empName as string,",
+				"          gender as string,",
+				"          country as string,",
+				"          isActive as integer,",
+				"          startDate as date,",
+				"          endDate as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1 derive(hashMap = md5(empId,empName,country)) ~> csvHash",
+				"source2 derive(hashMap = md5(empId,empName,country)) ~> tableHash",
+				"csvHash, tableHash exists(csvHash@hashMap == tableHash@hashMap,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"exists1 derive(isActive = 1,",
+				"          startdate = currentDate(),",
+				"          endDate = 'Null') ~> setToActive",
+				"exists2 derive(endDate = toDate(currentUTC()),",
+				"          isActive = 0) ~> derivedColumn1",
+				"derivedColumn1 alterRow(updateIf(true())) ~> alterRow1",
+				"tableHash, setToActive exists(source2@empId == source1@empId,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2",
+				"setToActive sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          surrKey as integer,",
+				"          empId as integer,",
+				"          empName as string,",
+				"          gender as string,",
+				"          country as string,",
+				"          isActive as integer,",
+				"          startDate as date,",
+				"          endDate as date",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          empId,",
+				"          empName,",
+				"          gender,",
+				"          country,",
+				"          isActive,",
+				"          startDate = startdate,",
+				"          endDate",
+				"     )) ~> sink1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          surrKey as integer,",
+				"          empId as integer,",
+				"          empName as string,",
+				"          gender as string,",
+				"          country as string,",
+				"          isActive as integer,",
+				"          startDate as date,",
+				"          endDate as date",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['surrKey'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          surrKey,",
+				"          empId,",
+				"          empName,",
+				"          gender,",
+				"          country,",
+				"          isActive,",
+				"          startDate,",
+				"          endDate",
+				"     )) ~> sink2"
+			]
+		}
+	}
+}

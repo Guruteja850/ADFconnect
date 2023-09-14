@@ -1,0 +1,126 @@
+{
+	"name": "DF_Incremental_data",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Cricketdata",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "lookup1"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          dimid as string,",
+				"          name as string,",
+				"          age as string,",
+				"          homecountry as string,",
+				"          iplteam as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          dimid as integer,",
+				"          name as string,",
+				"          age as integer,",
+				"          homecountry as string,",
+				"          iplteam as string,",
+				"          hash as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1 derive(hash = md5(name+homecountry+iplteam),",
+				"          dimid = toInteger(dimid),",
+				"          { age} = toInteger(age)) ~> derivedColumn1",
+				"derivedColumn1, source2 lookup(derivedColumn1@dimid == source2@dimid,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 split(isNull(source2@dimid),",
+				"     !isNull(derivedColumn1@dimid) && notEquals(derivedColumn1@hash, source2@hash),",
+				"     disjoint: false) ~> split1@(NewRecords, updatedRecords)",
+				"split1@updatedRecords alterRow(updateIf(true())) ~> AlterRow1",
+				"split1@NewRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          dimid as integer,",
+				"          name as string,",
+				"          age as integer,",
+				"          homecountry as string,",
+				"          iplteam as string,",
+				"          hash as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"AlterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          dimid as integer,",
+				"          name as string,",
+				"          age as integer,",
+				"          homecountry as string,",
+				"          iplteam as string,",
+				"          hash as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['dimid'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+			]
+		}
+	}
+}

@@ -1,0 +1,65 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Excel1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "src_Output",
+						"type": "DatasetReference"
+					},
+					"name": "blobsink"
+				}
+			],
+			"transformations": [
+				{
+					"name": "dcaddcolumn"
+				},
+				{
+					"name": "split1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          c_id as string,",
+				"          c_name as string,",
+				"          c_city as string,",
+				"          dept_name as string,",
+				"          reg_name as string,",
+				"          status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"split1@StartsWithb derive(date = currentDate()) ~> dcaddcolumn",
+				"source1 split(startsWith(c_name, 'b'),",
+				"     disjoint: true) ~> split1@(StartsWithb)",
+				"dcaddcolumn sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['df_output.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          c_id,",
+				"          c_name,",
+				"          c_city,",
+				"          department = dept_name,",
+				"          reg_name,",
+				"          status,",
+				"          date_of_modification = date",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> blobsink"
+			]
+		}
+	}
+}

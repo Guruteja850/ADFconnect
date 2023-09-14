@@ -1,0 +1,67 @@
+{
+	"name": "df_excel_unpivot",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "src_Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "unpivot1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Sales Channel} as string,",
+				"          {Baby Food} as double,",
+				"          Beverages as double,",
+				"          Cereal as double,",
+				"          Clothes as double,",
+				"          Cosmetics as double,",
+				"          Fruits as double,",
+				"          Household as double,",
+				"          Meat as double,",
+				"          {Office Supplies} as double,",
+				"          {Personal Care} as double,",
+				"          Product1 as double,",
+				"          Product2 as double,",
+				"          Product3 as double,",
+				"          Snacks as double,",
+				"          Vegetables as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 unpivot(output(",
+				"          Product as string,",
+				"          Revenue as double",
+				"     ),",
+				"     ungroupBy({Sales Channel}),",
+				"     lateral: true,",
+				"     ignoreNullPivots: false) ~> unpivot1",
+				"unpivot1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['Salesdata_unpivot.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

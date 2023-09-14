@@ -1,0 +1,82 @@
+{
+	"name": "df_excel_pivot",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "salesdata_xlsx_file",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "src_Output",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "pivot1"
+				},
+				{
+					"name": "MapDrifted1",
+					"description": "Creates an explicit mapping for each drifted column"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Region as string,",
+				"          Country as string,",
+				"          {Item Type} as string,",
+				"          {Sales Channel} as string,",
+				"          {Order Priority} as string,",
+				"          {Order Date} as date,",
+				"          {Order ID} as integer,",
+				"          {Ship Date} as date,",
+				"          {Units Sold} as short,",
+				"          {Unit Price} as double,",
+				"          {Unit Cost} as double,",
+				"          {Total Revenue} as double,",
+				"          {Total Cost} as double,",
+				"          {Total Profit} as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 pivot(groupBy({Sales Channel}),",
+				"     pivotBy({Item Type}),",
+				"     {} = sum({Total Revenue}),",
+				"     columnNaming: '$N$V',",
+				"     lateral: true) ~> pivot1",
+				"pivot1 derive({Baby Food} = toDouble(byName('Baby Food')),",
+				"          Beverages = toDouble(byName('Beverages')),",
+				"          Cereal = toDouble(byName('Cereal')),",
+				"          Clothes = toDouble(byName('Clothes')),",
+				"          Cosmetics = toDouble(byName('Cosmetics')),",
+				"          Fruits = toDouble(byName('Fruits')),",
+				"          Household = toDouble(byName('Household')),",
+				"          Meat = toDouble(byName('Meat')),",
+				"          {Office Supplies} = toDouble(byName('Office Supplies')),",
+				"          {Personal Care} = toDouble(byName('Personal Care')),",
+				"          Product1 = toDouble(byName('Product1')),",
+				"          Product2 = toDouble(byName('Product2')),",
+				"          Product3 = toDouble(byName('Product3')),",
+				"          Snacks = toDouble(byName('Snacks')),",
+				"          Vegetables = toDouble(byName('Vegetables'))) ~> MapDrifted1",
+				"MapDrifted1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['salesdata_output.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

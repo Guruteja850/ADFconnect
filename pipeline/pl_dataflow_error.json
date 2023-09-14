@@ -1,0 +1,52 @@
+{
+	"name": "pl_dataflow_error",
+	"properties": {
+		"activities": [
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_Error_Catching",
+						"type": "DataFlowReference",
+						"parameters": {
+							"ErrorMessage": {
+								"value": "'@{pipeline().parameters.errorMessagaPL}'",
+								"type": "Expression"
+							},
+							"Pipeline": {
+								"value": "'@{pipeline().parameters.pipeLinePL}'",
+								"type": "Expression"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"errorMessagaPL": {
+				"type": "string"
+			},
+			"pipeLinePL": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-25T11:21:03Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

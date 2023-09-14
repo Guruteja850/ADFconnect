@@ -1,0 +1,81 @@
+{
+	"name": "DS_Pivot_File",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "pivotoutput.csv",
+				"container": "output1"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Sales Channel",
+				"type": "String"
+			},
+			{
+				"name": "null",
+				"type": "String"
+			},
+			{
+				"name": "Baby Food",
+				"type": "String"
+			},
+			{
+				"name": "Beverages",
+				"type": "String"
+			},
+			{
+				"name": "Cereal",
+				"type": "String"
+			},
+			{
+				"name": "Clothes",
+				"type": "String"
+			},
+			{
+				"name": "Cosmetics",
+				"type": "String"
+			},
+			{
+				"name": "Fruits",
+				"type": "String"
+			},
+			{
+				"name": "Household",
+				"type": "String"
+			},
+			{
+				"name": "Meat",
+				"type": "String"
+			},
+			{
+				"name": "Office Supplies",
+				"type": "String"
+			},
+			{
+				"name": "Personal Care",
+				"type": "String"
+			},
+			{
+				"name": "Snacks",
+				"type": "String"
+			},
+			{
+				"name": "Vegetables",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

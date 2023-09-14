@@ -1,0 +1,36 @@
+{
+	"name": "bhanutable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OfficeLaptopOnpremiseSSMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ProductKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "EnglishProductName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Color",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DaysToManufacture",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "OnPremiseDimProduct"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

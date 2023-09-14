@@ -1,0 +1,18 @@
+{
+	"name": "text_trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/input/blobs/",
+			"blobPathEndsWith": ".txt",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/5ace87dd-5164-4f04-9ac7-8fc12b8d5aaa/resourceGroups/jgt-demo/providers/Microsoft.Storage/storageAccounts/jgt1234",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}

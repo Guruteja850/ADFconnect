@@ -1,0 +1,47 @@
+{
+	"name": "Excel1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "source",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Extra.xlsx",
+				"container": "excelfiles"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "c_id",
+				"type": "String"
+			},
+			{
+				"name": "c_name",
+				"type": "String"
+			},
+			{
+				"name": "c_city",
+				"type": "String"
+			},
+			{
+				"name": "dept_name",
+				"type": "String"
+			},
+			{
+				"name": "reg_name",
+				"type": "String"
+			},
+			{
+				"name": "status",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,89 @@
+{
+	"name": "df_excel_pivot2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sales_Data",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText7",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "pivot1"
+				},
+				{
+					"name": "MapDrifted1",
+					"description": "Creates an explicit mapping for each drifted column"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Sno as string,",
+				"          Region as string,",
+				"          Country as string,",
+				"          {Item Type} as string,",
+				"          {Sales Channel} as string,",
+				"          {Order Priority} as string,",
+				"          {Order Date} as string,",
+				"          {Order ID} as string,",
+				"          {Ship Date} as string,",
+				"          {Units Sold} as string,",
+				"          {Unit Price} as string,",
+				"          {Unit Cost} as string,",
+				"          {Total Revenue} as string,",
+				"          {Total Cost} as string,",
+				"          {Total Profit} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 pivot(groupBy({Sales Channel}),",
+				"     pivotBy({Item Type}),",
+				"     {} = sum(toDecimal({Total Revenue})),",
+				"     columnNaming: '$N$V',",
+				"     lateral: true) ~> pivot1",
+				"pivot1 derive(null = toDecimal(byName('null')),",
+				"          {Baby Food} = toDecimal(byName('Baby Food')),",
+				"          Beverages = toDecimal(byName('Beverages')),",
+				"          Cereal = toDecimal(byName('Cereal')),",
+				"          Clothes = toDecimal(byName('Clothes')),",
+				"          Cosmetics = toDecimal(byName('Cosmetics')),",
+				"          Fruits = toDecimal(byName('Fruits')),",
+				"          Household = toDecimal(byName('Household')),",
+				"          Meat = toDecimal(byName('Meat')),",
+				"          {Office Supplies} = toDecimal(byName('Office Supplies')),",
+				"          {Personal Care} = toDecimal(byName('Personal Care')),",
+				"          Snacks = toDecimal(byName('Snacks')),",
+				"          Vegetables = toDecimal(byName('Vegetables'))) ~> MapDrifted1",
+				"MapDrifted1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Column_1 as string,",
+				"          Column_2 as string,",
+				"          Column_3 as string,",
+				"          Column_4 as string,",
+				"          Column_5 as string,",
+				"          Column_6 as string",
+				"     ),",
+				"     partitionFileNames:['pivotoutput.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

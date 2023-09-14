@@ -1,0 +1,13 @@
+{
+	"name": "bhanu_2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OfficeLaptopOnpremiseSSMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,16 @@
+{
+	"name": "OfficeLaptopOnpremiseSSMS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=AD-CND101BBC2;initial catalog=AdventureWorksDW2019;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkMzM4MDM4ZC01NzIzLTRiODEtYjFlYi0yYmQyNzc0YzM1MTQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "OfficeLaptopOnpremiseIR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

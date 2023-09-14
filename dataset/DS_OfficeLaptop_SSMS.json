@@ -1,0 +1,13 @@
+{
+	"name": "DS_OfficeLaptop_SSMS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OfficeLaptopOnpremiseSSMS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

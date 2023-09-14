@@ -1,0 +1,24 @@
+{
+	"name": "On_Premise_SSMS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnPremiseSQLServer",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sourceTbl": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().sourceTbl",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
