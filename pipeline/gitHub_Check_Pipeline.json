@@ -1,5 +1,5 @@
 {
-	"name": "pipeline2",
+	"name": "gitHub_Check_Pipeline",
 	"properties": {
 		"activities": [
 			{
